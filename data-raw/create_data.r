@@ -1,0 +1,7 @@
+.monNameGenData <- list()
+.monNameGenData$prefix <- scan(file="data-raw/prefixes.csv", what="character", skip=1)
+.monNameGenData$suffix <- scan(file="data-raw/suffixes.csv", what="character", skip=1)
+.monNameGenData$appel <-  scan(file="data-raw/appelation.csv", what="character", skip=1)
+.monNameGenData$appel <- substring(.monNameGenData$appel, 5)
+str(.monNameGenData)
+devtools::use_data(.monNameGenData, internal = TRUE, overwrite = TRUE)
