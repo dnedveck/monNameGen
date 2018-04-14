@@ -1,7 +1,9 @@
 create_sample <- function(n, data, regex) {
-  if (is.null(regex)) regex <- "\\.*"
   sample(
-    data[grepl(regex, data, ignore.case = TRUE)], 
+    if (!is.null(regex)) 
+      data[grepl(regex, data, ignore.case = TRUE)]
+    else
+      data, 
     n, 
     replace = TRUE
   )
