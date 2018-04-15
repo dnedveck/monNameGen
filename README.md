@@ -8,5 +8,5 @@ permutations provided by
 
 ```r
 if (!require(devtools)) install.packages("devtools")
-devtools::install_github("pegeler/monNameGen")
+devtools::install_github("dnedveck/monNameGen")
 ```
