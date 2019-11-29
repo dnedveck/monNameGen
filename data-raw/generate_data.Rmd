@@ -1,0 +1,65 @@
+---
+title: "Creating data"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+options(stringsAsFactors = FALSE)
+```
+
+Broad structure:
+
+
+make a function to read in the csv files per each dir
+
+```{r}
+ReadInNames <- function(readdir){
+  
+  files <- c("prefix", "suffix", "appelation")
+  names(files) <- files
+  
+  lapply(files, 
+                  function(x){
+                    read.csv(file.path(readdir, paste0(x, ".csv")))
+                  })
+  
+}
+```
+
+```{r}
+dirs <- c("DII", "non-canon")
+raw_names <- lapply(dirs, ReadInNames)
+names(raw_names) <- dirs
+```
+
+Now we'll make a table for each of prefix, suffix, appelation
+
+
+```{r}
+BuildNameTable <- function( indexnum, raw_names){
+  tmp <- lapply(raw_names, "[[", indexnum)
+  tmp <- lapply(seq_along(tmp), function(x) {
+    out <- cbind(tmp[[x]], 1L)
+  names(out)[2] <- names(tmp)[[x]]
+  return(out)
+  })
+tmp_table <- Reduce("full_join", tmp)
+rapply(tmp_table, function(x) {x[is.na(x)] <- 0; x},
+       classes = "integer", how = "replace")
+}
+```
+
+```{r}
+name_tables <- lapply(1:3, BuildNameTable, raw_names)
+names(name_tables) <- names(raw_names[[1]])
+```
+
+
+## Saving the data
+
+```{r}
+usethis::use_data(name_tables, internal = TRUE, overwrite = TRUE)
+```
+
